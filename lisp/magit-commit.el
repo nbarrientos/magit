@@ -129,7 +129,8 @@ manpage for details.")
    (magit-commit:--date :level 7)
    (magit:--gpg-sign :level 5)
    (magit:--signoff)
-   (magit-commit:--reuse-message)]
+   (magit-commit:--reuse-message)
+   (magit-commit:--reedit-message)]
   [["Create"
     ("c" "Commit"         magit-commit-create)]
    ["Edit HEAD"
@@ -174,10 +175,18 @@ manpage for details.")
   :class 'transient-option
   :shortarg "-C"
   :argument "--reuse-message="
-  :reader #'magit-read-reuse-message
+  :reader #'magit-read-reuse-or-reedit-message
   :history-key 'magit-revision-history)
 
-(defun magit-read-reuse-message (prompt &optional default history)
+(transient-define-argument magit-commit:--reedit-message ()
+  :description "Reedit commit message"
+  :class 'transient-option
+  :shortarg "-c"
+  :argument "--reedit-message="
+  :reader #'magit-read-reuse-or-reedit-message
+  :history-key 'magit-revision-history)
+
+(defun magit-read-reuse-or-reedit-message (prompt &optional default history)
   (magit-completing-read prompt (magit-list-refnames)
                          nil nil nil history
                          (or default
